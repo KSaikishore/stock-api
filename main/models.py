@@ -31,8 +31,8 @@ class Functionality(models.TextChoices):
 
 class Transaction(Audit):
     Type = models.CharField(max_length=200, choices=Functionality.choices)
-    seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+    seller = models.ForeignKey(User, related_name="seller",on_delete=models.CASCADE)
+    buyer = models.ForeignKey(User, related_name="buyer",on_delete=models.CASCADE)
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
     price = models.IntegerField()
     quantity = models.IntegerField()

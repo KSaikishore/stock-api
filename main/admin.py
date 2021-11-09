@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Stock, UserProfile, Transaction,Car,Engine
+from .models import Stock, UserProfile, Transaction
 
 
 class StockAdmin(admin.ModelAdmin):
@@ -14,14 +14,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('Type', 'seller',  'price', 'stock', 'quantity')
 
-class CarAdmin(admin.ModelAdmin):
-    list_display=('name','engine')
-
-class EngineAdmin(admin.ModelAdmin):
-    list_display=('name',)
 
 admin.site.register(Stock, StockAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Transaction, TransactionAdmin)
-admin.site.register(Car,CarAdmin)
-admin.site.register(Engine,EngineAdmin)

@@ -1,0 +1,40 @@
+version: "3.8"
+   
+services:
+    django:
+        build: .
+        container_name: django
+        volumes:
+            - .:/usr/src/app/
+        ports:
+            - "8000:8000"
+        environment:
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+        depends_on:
+            - redis
+    celery:
+        build: .
+        command: celery -A stockapi worker -l INFO
+        volumes:
+            - .:/usr/src/app
+        environment:
+            - DEBUG=1
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+        depends_on:
+            - django
+            - redis
+            
+    flower:
+        build: .
+        command: celery -A stockapi flower --address=0.0.0.0 --port=5566
+        volumes:
+            - .:/usr/src/app
+        ports:
+            - "5566:5566"
+        depends_on:
+            - celery
+    redis:
+        image: "redis:alpine"
+

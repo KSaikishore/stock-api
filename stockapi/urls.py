@@ -31,7 +31,5 @@ urlpatterns = [
     path('register/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('profile', views.UserProfiler.as_view(), name='Obtain Profile'),
-    path('buy', views.Buy.as_view(), name='Buy Share'),
-    path('sell', views.Sell.as_view(), name='Sell Share'),
-
+    path('transaction', views.Transaction.as_view(), name='Create Transaction'),
 ]
