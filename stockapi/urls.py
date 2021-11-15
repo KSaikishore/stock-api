@@ -32,4 +32,6 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('profile', views.UserProfiler.as_view(), name='Obtain Profile'),
     path('transaction', views.Transaction.as_view(), name='Create Transaction'),
+    path('test', views.test_view, name='testing'),
+
 ]

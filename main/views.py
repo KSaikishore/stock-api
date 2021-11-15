@@ -9,7 +9,9 @@ from main.models import UserProfile, Stock
 from rest_framework.generics import CreateAPIView, ListAPIView
 import json
 import requests
-
+from rest_framework.decorators import api_view
+from celery import chain
+from main.tasks import task1
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -65,3 +67,10 @@ class Transaction(CreateAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view()
+def test_view(request):
+    task1.apply_async()
+    return Response({"message": "Hello, world!"})
+
+

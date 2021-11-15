@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'stockapi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get("SQL_ENGINE", 'django.db.backends.postgresql_psycopg2'),
+        'NAME': os.environ.get("SQL_WORKDB", 'stockdb'),
+        'USER': os.environ.get("SQL_USER", "postgres"),
+        'PASSWORD': os.environ.get("SQL_PASSWORD", "postgres"),
+        'HOST': os.environ.get("SQL_HOST", "db"),
+        'PORT': os.environ.get("SQL_PORT", "5432"),
     }
 }
 
@@ -130,3 +134,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
