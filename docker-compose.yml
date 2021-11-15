@@ -1,9 +1,23 @@
 version: "3.8"
    
 services:
+    redis:
+        image: "redis:alpine"
+
+    db:
+        image: postgres:latest
+        restart: always
+        ports:
+          - "5432:5432"
+        environment:
+          - POSTGRES_DB=stockdb  
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+
     django:
         build: .
         container_name: django
+        command: ./wait-for-db.sh
         volumes:
             - .:/usr/src/app/
         ports:
@@ -11,11 +25,15 @@ services:
         environment:
             - CELERY_BROKER=redis://redis:6379/0
             - CELERY_BACKEND=redis://redis:6379/0
+            - SQL_HOST=db
+            - SQL_PORT=5432
         depends_on:
             - redis
+            - db
+
     celery:
         build: .
-        command: celery -A stockapi worker -l INFO
+        command: ./wait-for-django.sh
         volumes:
             - .:/usr/src/app
         environment:
@@ -23,11 +41,12 @@ services:
             - CELERY_BROKER=redis://redis:6379/0
             - CELERY_BACKEND=redis://redis:6379/0
         depends_on:
-            - django
+            - db
             - redis
-            
+            - django
     flower:
         build: .
+        restart: always
         command: celery -A stockapi flower --address=0.0.0.0 --port=5566
         volumes:
             - .:/usr/src/app
@@ -35,6 +54,4 @@ services:
             - "5566:5566"
         depends_on:
             - celery
-    redis:
-        image: "redis:alpine"
 
