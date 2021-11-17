@@ -8,4 +8,4 @@ while ! nc -z django 8000; do
     sleep 3
 done
 echo "done waiting for django server, starting celery"
-celery -A stockapi worker -l INFO
+celery -A stockapi worker -l INFO $1 $2

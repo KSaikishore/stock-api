@@ -33,6 +33,7 @@ services:
 
     celery:
         build: .
+        restart: always
         command: ./wait-for-django.sh
         volumes:
             - .:/usr/src/app
@@ -44,6 +45,22 @@ services:
             - db
             - redis
             - django
+
+    celery-long:
+        build: .
+        restart: always
+        command: ["./wait-for-django.sh", "-Q","long"]
+        volumes:
+            - .:/usr/src/app
+        environment:
+            - DEBUG=1
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+        depends_on:
+            - db
+            - redis
+            - django
+
     flower:
         build: .
         restart: always

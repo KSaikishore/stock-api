@@ -8,3 +8,9 @@ def task1():
     print("in task1:")
     time.sleep(10)
     return True
+
+@shared_task
+def task2():
+    print("in task2:")
+    time.sleep(10)
+    return True

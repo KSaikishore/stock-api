@@ -12,6 +12,7 @@ import requests
 from rest_framework.decorators import api_view
 from celery import chain
 from main.tasks import task1
+from main.tasks import task2
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -71,6 +72,7 @@ class Transaction(CreateAPIView):
 @api_view()
 def test_view(request):
     task1.apply_async()
+    task2.apply_async(queue="long")
     return Response({"message": "Hello, world!"})
 
 
